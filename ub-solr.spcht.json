@@ -65,11 +65,11 @@
             "graph": "http://umbel.org/umbel/isLike",
             "field": "url",
             "required": "optional",
-            "comment": "ohne Marc-Fallback; in den SOLR gelangen nur URNs nach einem bestimmten Muster aus 024a:037n:856u",
-            "fallback": {
-                "source": "marc",
-                "field": "856",
-                "subfield": "u"
+            "comment": "in den SOLR gelangen nur URNs nach einem bestimmten Muster aus 024a:037n:856u"
+            #"fallback": {
+            #    "source": "marc",
+            #    "field": "856", (nur wenn Ind.2 = 0)
+            #    "subfield": "u"
             }
         },
         {
@@ -118,10 +118,10 @@
             "name": "Erscheinungsjahr",
             "source": "dict",
             "graph": "http://purl.org/dc/terms/issued",
-            "field": "publishDate",
-            "alternatives": ["publishDateSort"],
+            "field": "publishDateSort",
+            "alternatives": ["publishDate"],
             "required": "optional",
-            "comment": "ggf. nur publishDateSort (normalisiertes Datum) verwenden, ohne bibliographische Feinheiten und damit auch ohne Klammern, Kreuze etc.?",
+            "comment": "publishDateSort enthält normalisiertes Datum ohne bibliographische Feinheiten und damit auch ohne Klammern, Kreuze etc.; evtl. ohne fallback?",
             "fallback": {
                 "source": "marc",
                 "field": "260",
@@ -171,16 +171,12 @@
         },
         {
             "name": "Hochschulschriftenvermerk",
-            "source": "dict",
+            "source": "marc",
             "graph": "http://rdaregistry.info/Elements/u/P60489",
-            "field": "dissertation_note",
+            "field": "502",
+            "subfield": "a",
             "required": "optional",
             "comment": "Neu: das Solr-Feld dissertation_note wird inzwischen nicht mehr befüllt",
-            "fallback": {
-                "source": "marc",
-                "field": "502",
-                "subfield": "a"
-            }
         },
         {
             "name": "Typ der Dokument Art",

@@ -65,11 +65,12 @@
             "graph": "http://umbel.org/umbel/isLike",
             "field": "url",
             "required": "optional",
-            "comment": "ohne Marc-Fallback; in den SOLR gelangen nur URNs nach einem bestimmten Muster aus 024a:037n:856u",
+            "comment": "nur sinnvoll bei facet_avail:Free",
             "fallback": {
                 "source": "marc",
                 "field": "856",
-                "subfield": "u"
+                "subfield": "u",
+				"comment": "nur sinnvoll, wenn Ind2=0"
             }
         },
         {
@@ -118,10 +119,10 @@
             "name": "Erscheinungsjahr",
             "source": "dict",
             "graph": "http://purl.org/dc/terms/issued",
-            "field": "publishDate",
-            "alternatives": ["publishDateSort"],
+            "field": "publishDateSort",
+            "alternatives": ["publishDate"],
             "required": "optional",
-            "comment": "ggf. nur publishDateSort (normalisiertes Datum) verwenden, ohne bibliographische Feinheiten und damit auch ohne Klammern, Kreuze etc.?",
+            "comment": "publishDateSort ist normalisiertes Datum, ohne bibliographische Feinheiten und damit ohne Klammern, Kreuze etc.",
             "fallback": {
                 "source": "marc",
                 "field": "260",
@@ -134,14 +135,28 @@
             }
         },
         {
-            "name": "ISBD",
+            "name": "Umfang",
             "source": "dict",
-            "graph": "http://iflastandards.info/ns/isbd/elements/P1053",
+            "graph": "https://schema.org/numberOfPages",
             "field": "physical",
             "required": "optional",
-            "fallback": {
+            "comment": "DINI-KIM-Vorschlag http://iflastandards.info/ns/isbd/elements/P1053 scheint unpassend; schema.org aber eigentlich nur für Book; evtl. http://purl.org/dc/terms/extent ?",
+			"fallback": {
                 "source": "marc",
                 "field": "300",
+                "subfield": "a"
+            }
+        },
+		{
+            "name": "Auflage/Ausgabe",
+            "source": "dict",
+            "graph": "https://schema.org/bookEdition",
+            "field": "edition",
+            "required": "optional",
+            "comment": "DINI-KIM-Vorschlag bibo - löst nicht auf; schema.org nur für Book",
+			"fallback": {
+                "source": "marc",
+                "field": "250",
                 "subfield": "a"
             }
         },
@@ -150,9 +165,7 @@
             "source": "dict",
             "graph": "http://purl.org/dc/terms/bibliographicCitation",
             "field": "container_title",
-            "alternatives": ["container_reference"],
             "required": "optional",
-            "comment": "# 773t:773s:773a, first",
             "fallback": {
                 "source": "marc",
                 "field": "773",
@@ -171,16 +184,12 @@
         },
         {
             "name": "Hochschulschriftenvermerk",
-            "source": "dict",
+            "source": "marc",
             "graph": "http://rdaregistry.info/Elements/u/P60489",
-            "field": "dissertation_note",
+            "field": "502",
+			"subfield": "a",
             "required": "optional",
-            "comment": "Neu: das Solr-Feld dissertation_note wird inzwischen nicht mehr befüllt",
-            "fallback": {
-                "source": "marc",
-                "field": "502",
-                "subfield": "a"
-            }
+            "comment": "Solr-Feld dissertation_note wird inzwischen nicht mehr befüllt"
         },
         {
             "name": "Typ der Dokument Art",
@@ -209,6 +218,26 @@
                 "Notated Music": "http://rdaregistry.info/Elements/u/P60488"
             }
          },
+		 {
+			"name": "Inhaltstyp",
+			"source": "dict",
+			"graph": "http://rdaregistry.info/Elements/u/P60584",
+			"field": "genre_facet",
+			"comment": "TODO überprüfen und fallback; evtl doch als type:triple",
+			"required": "optional"
+		 },
+		 {
+			"name": "Parallelausgabe",
+			"source": "marc",
+			"graph": "http://purl.org/dc/terms/hasVersion",
+			"field": "776",
+			"subfield": "w",
+			"required": "optional",
+			"type": "triple",
+            "prepend": "https://data.finc.info/resources/0-",
+            "match": "(\\(DE-627\\))[0-9]*",
+            "cut": "(\\(DE-627\\))"
+		 },
          {
             "name": "Sprache des Objects",
             "source": "dict",
@@ -216,19 +245,26 @@
             "required": "optional",
             "field": "language",
             "type": "triple",
-            "mapping_settings": { "$ref": "./translation_maps/languages_long.json" }
+            "mapping_settings": { "$ref": "./translation_maps/languages_long.json" },
+			"comment": "",
+			"fallback": {
+				"source": "marc",
+				"field": "041",
+				"subfield": "a",
+				"prepend": "https://id.loc.gov/vocabulary/languages/"
+			}
         },
         {
-            "name": "Verfügbarkeitswachtel",
+            "name": "Verfügbarkeit",
             "source": "dict",
             "graph": "http://schema.org/availability",
             "required": "optional",
-            "field": "id",
+            "field": "kxp_id_str",
             "prepend": "https://data.ub.uni-leipzig.de/item/wachtl/DE-15:ppn:",
             "type": "triple"
         },
         {
-            "name" : "Teilhaber als Graph",
+            "name" : "Beteiligte als Graph",
             "source": "dict",
             "graph": "http://purl.org/dc/terms/contributor",
             "field": "names_id_str_mv",
@@ -266,13 +302,13 @@
                 }
         },
         {
-            "name": "Hierarchy Top ID / IS Part of",
+            "name": "Gesamtaufnahme",
             "source": "dict",
             "graph": "http://purl.org/dc/terms/isPartOf",
             "required": "optional",
             "prepend": "https://data.finc.info/resources/",
             "type": "triple",
-            "field": "hierarchy_top_id"
+            "field": "hierarchy_parent_id"
         }
     ]
  }

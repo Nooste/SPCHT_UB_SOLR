@@ -17,7 +17,7 @@
             "fallback": {
                 "source": "marc",
                 "field": "020",
-                "subfield": "a"
+                "subfield": "a" 
             }
         },
         {
@@ -70,7 +70,7 @@
                 "source": "marc",
                 "field": "856",
                 "subfield": "u",
-				"comment": "nur sinnvoll, wenn Ind2=0"
+				"comment": "nur sinnvoll, wenn Ind2=0, oder y Online-Zugriff"
             }
         },
         {
@@ -140,7 +140,7 @@
             "graph": "https://schema.org/numberOfPages",
             "field": "physical",
             "required": "optional",
-            "comment": "DINI-KIM-Vorschlag http://iflastandards.info/ns/isbd/elements/P1053 scheint unpassend; schema.org aber eigentlich nur für Book; evtl. http://purl.org/dc/terms/extent ?",
+            "comment": "DINI-KIM-Vorschlag http://iflastandards.info/ns/isbd/elements/P1053 scheint unpassend; schema.org aber eigentlich nur für Book; evtl. http://purl.org/dc/terms/extent ? lobid nutzt http://id.loc.gov/ontologies/bibframe/extent",
 			"fallback": {
                 "source": "marc",
                 "field": "300",
@@ -153,7 +153,7 @@
             "graph": "https://schema.org/bookEdition",
             "field": "edition",
             "required": "optional",
-            "comment": "DINI-KIM-Vorschlag bibo - löst nicht auf; schema.org nur für Book",
+            "comment": "DINI-KIM-Vorschlag bibo/edition - löst nicht auf; schema.org nur für Book",
 			"fallback": {
                 "source": "marc",
                 "field": "250",
@@ -204,27 +204,130 @@
                 "$ref": "./translation_maps/documents.json"
             }
         },
+		{
+			"name": "Inhaltstyp",
+			"source": "marc",
+			"graph": "http://www.rdaregistry.info/Elements/u/#P60049",
+			"field": "336",
+			"subfield": "a",
+			"required": "optional",
+			"mapping": {
+                "aufgeführte Musik": "http://rdaregistry.info/termList/RDAContentType/1011",
+				"Bewegungsnotation": "http://rdaregistry.info/termList/RDAContentType/1009",
+				"Computerdaten": "http://rdaregistry.info/termList/RDAContentType/1007",
+				"Computerprogramm": "http://rdaregistry.info/termList/RDAContentType/1008",
+				"dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1021",
+				"dreidimensionales bewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1022",
+				"Geräusche": "http://rdaregistry.info/termList/RDAContentType/1012",
+				"gesprochenes Wort": "http://rdaregistry.info/termList/RDAContentType/1013",
+				"kartografische dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1006",
+				"kartografischer Datensatz": "http://rdaregistry.info/termList/RDAContentType/1001",
+				"kartografisches bewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1003",
+				"kartografisches Bild": "http://rdaregistry.info/termList/RDAContentType/1002",
+				"kartografisches taktiles Bild": "http://rdaregistry.info/termList/RDAContentType/1004",
+				"kartografische taktile dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1005",
+				"Noten": "http://rdaregistry.info/termList/RDAContentType/1010",
+				"taktile Bewegungsnotation": "http://rdaregistry.info/termList/RDAContentType/1017",
+				"taktile dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1019",
+				"taktile Noten": "http://rdaregistry.info/termList/RDAContentType/1016",
+				"taktiler Text": "http://rdaregistry.info/termList/RDAContentType/1018",
+				"taktiles Bild": "http://rdaregistry.info/termList/RDAContentType/1015",
+				"Text": "http://rdaregistry.info/termList/RDAContentType/1020",
+				"unbewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1014",
+				"zweidimensionales bewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1023"
+            }
+		},
+		{
+			"name": "Medientyp",
+			"source": "marc",
+			"graph": "http://www.rdaregistry.info/Elements/u/#P60050",
+			"field": "337",
+			"subfield": "a",
+			"required": "optional",
+			"type": "triple",
+			"mapping": {
+				"audio": "http://rdaregistry.info/termList/RDAMediaType/1001",
+				"Mikroform": "http://rdaregistry.info/termList/RDAMediaType/1002",
+				"Computermedien": "http://rdaregistry.info/termList/RDAMediaType/1003",
+				"mikroskopisch": "http://rdaregistry.info/termList/RDAMediaType/1004",
+				"projizierbar": "http://rdaregistry.info/termList/RDAMediaType/1005",
+				"stereografisch": "http://rdaregistry.info/termList/RDAMediaType/1006",
+				"ohne Hilfsmittel zu benutzen": "http://rdaregistry.info/termList/RDAMediaType/1007",
+				"video": "http://rdaregistry.info/termList/RDAMediaType/1008"
+			}
+		},
         {
-            "name": "Medium des Objekts",
-            "source": "dict",
-            "graph": "http://purl.org/dc/terms/medium",
-            "field": "format_finc",
+            "name": "Datenträgertyp",
+            "source": "marc",
+            "graph": "http://www.rdaregistry.info/Elements/u/#P60048",
+            "field": "338",
+			"subfield": "a",
             "required": "optional",
-            "comment": "TODO",
+            "comment": "evtl. weniger wichtig?; fallback?",
             "type": "triple",
             "mapping": {
-                "Audio": "http://rdaregistry.info/termList/RDAMediaType/1001",
-                "Microform": "http://rdaregistry.info/termList/RDAMediaType/1002",
-                "Notated Music": "http://rdaregistry.info/Elements/u/P60488"
+				"Audiocartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1002",
+				"Audio Belt": "http://www.rdaregistry.info/termList/RDACarrierType/#1070",
+				"Audio wire reel": "http://www.rdaregistry.info/termList/RDACarrierType/#1071",
+				"Audiodisk": "http://www.rdaregistry.info/termList/RDACarrierType/#1004",
+				"Audiokassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1007",
+				"Band": "http://www.rdaregistry.info/termList/RDACarrierType/#1049",
+				"Blatt": "http://www.rdaregistry.info/termList/RDACarrierType/#1048",
+				"Computerchip-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1012",
+				"Computerdisk": "http://www.rdaregistry.info/termList/RDACarrierType/#1013",
+				"Computerdisk-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1014",
+				"Dia": "http://www.rdaregistry.info/termList/RDACarrierType/#1040",
+				"Filmdose": "http://www.rdaregistry.info/termList/RDACarrierType/#1032",
+				"Filmkassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1033",
+				"Filmrolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1069",
+				"Filmspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1034",
+				"Filmstreifen": "http://www.rdaregistry.info/termList/RDACarrierType/#1035",
+				"Filmstreifen für Einzelbildvorführung": "http://www.rdaregistry.info/termList/RDACarrierType/#1036",
+				"Filmstreifen-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1037",
+				"Flipchart": "http://www.rdaregistry.info/termList/RDACarrierType/#1046",
+				"Gegenstand": "http://www.rdaregistry.info/termList/RDACarrierType/#1059",
+				"Karte": "http://www.rdaregistry.info/termList/RDACarrierType/#1045",
+				"Lichtundurchlässiger Mikrofiche": "http://www.rdaregistry.info/termList/RDACarrierType/#1028",
+				"Magnetbandcartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1015",
+				"Magnetbandkassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1016",
+				"Magnetbandspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1017",
+				"Mikrofiche": "http://www.rdaregistry.info/termList/RDACarrierType/#1022",
+				"Mikrofichekassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1023",
+				"Mikrofilm-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1024",
+				"Mikrofilmkassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1025",
+				"Mikrofilmlochkarte": "http://www.rdaregistry.info/termList/RDACarrierType/#1021",
+				"Mikrofilmrolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1056",
+				"Mikrofilmspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1026",
+				"Mikrofilmstreifen": "http://www.rdaregistry.info/termList/RDACarrierType/#1027",
+				"Notenrolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1006",
+				"Objektträger": "http://www.rdaregistry.info/termList/RDACarrierType/#1030",
+				"Online-Ressource": "http://www.rdaregistry.info/termList/RDACarrierType/#1018",
+				"Overheadfolie": "http://www.rdaregistry.info/termList/RDACarrierType/#1039",
+				"Phonographenzylinder": "http://www.rdaregistry.info/termList/RDACarrierType/#1003",
+				"Rolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1047",
+				"Speicherkarte": "http://www.rdaregistry.info/termList/RDACarrierType/#1011",
+				"Stereobild": "http://www.rdaregistry.info/termList/RDACarrierType/#1042",
+				"Stereografische Disk": "http://www.rdaregistry.info/termList/RDACarrierType/#1043",
+				"Tonbandspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1008",
+				"Tonspurspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1005",
+				"Videobandspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1053",
+				"Videocartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1051",
+				"Videodisk": "http://www.rdaregistry.info/termList/RDACarrierType/#1060",
+				"Videokassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1052"
             }
          },
 		 {
-			"name": "Inhaltstyp",
+			"name": "Genre",
 			"source": "dict",
 			"graph": "http://rdaregistry.info/Elements/u/P60584",
 			"field": "genre_facet",
-			"comment": "TODO überprüfen und fallback; evtl doch als type:triple",
-			"required": "optional"
+			"required": "optional",
+			"comment": "nature of content",
+			"fallback": {
+                     "source": "marc",
+                     "field": "655",
+                     "subfield": "a"
+					 }
 		 },
 		 {
 			"name": "Parallelausgabe",
@@ -305,10 +408,21 @@
             "name": "Gesamtaufnahme",
             "source": "dict",
             "graph": "http://purl.org/dc/terms/isPartOf",
-            "required": "optional",
+            "field": "hierarchy_parent_id",
+			"required": "optional",
             "prepend": "https://data.finc.info/resources/",
-            "type": "triple",
-            "field": "hierarchy_parent_id"
+            "type": "triple"
+        },
+		{
+            "name": "Inhaltsbeschreibung",
+            "source": "marc",
+            "graph": "http://purl.org/dc/terms/description",
+			"field": "contents",
+            "required": "optional",
+            "field": "520",
+			"subfield": "a",
+			"comment" : "unnötig?"
         }
+		
     ]
  }

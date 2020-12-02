@@ -1,428 +1,456 @@
- {
-    "id_source": "dict",
-    "id_field": "id",
-    "id_fallback": {
-        "source": "marc",
-        "field": "001",
-        "subfield": "none"
-    },
-    "nodes": [
-        {
-            "name": "ISBN",
-            "source": "dict",
-            "graph": "http://schema.org/isbn",
-            "field": "isbn",
-            "required": "optional",
-            "comment": "abweichend von DINI-KIM-Empfehlung schema.org statt bibo",
-            "fallback": {
-                "source": "marc",
-                "field": "020",
-                "subfield": "a" 
-            }
-        },
-        {
-            "name": "ISSN",
-            "source": "dict",
-            "graph":  "https://schema.org/issn",
-            "field": "issn",
-            "required": "optional",
-            "comment": "abweichend von DINI-KIM-Empfehlung schema.org statt bibo",
-            "fallback": {
-                "source": "marc",
-                "field": "022",
-                "subfield": "a"
-            }
-        },
-        {
-            "name": "Hauptsachtitel des Werkes",
-            "source": "dict",
-            "graph": "http://purl.org/dc/terms/title",
-            "field": "title",
-            "alternatives": ["title_short"],
-            "required": "optional",
-            "fallback": {
-                "source": "marc",
-                "field": "245",
-                "subfields": ["a", "b"]
-            }
-        },
-        {
-            "name": "Zusatz zum Hauptsachtitel",
-            "source": "dict",
-            "graph": "http://rdaregistry.info/Elements/u/P60493",
-            "field": "title_sub",
-            "alternatives": ["title_part"],
-            "required": "optional",
-                "fallback": {
-                "source": "marc",
-                "field": "245",
-                "subfield": "b"
-                }
-        },
-        {
-            "name": "gleich wie",
-            "source": "dict",
-            "graph": "http://umbel.org/umbel/isLike",
-            "field": "url",
-            "required": "optional",
-            "comment": "nur sinnvoll bei facet_avail:Free",
-            "fallback": {
-                "source": "marc",
-                "field": "856",
-                "subfield": "u",
-				"comment": "nur sinnvoll, wenn Ind2=0, oder y Online-Zugriff"
-            }
-        },
-        {
-            "name": "Erscheinungsvermerk",
-            "source": "dict",
-            "graph": "http://rdaregistry.info/Elements/u/P60333",
-            "field": "imprint_str_mv",
-            "required": "optional",
-            "comment": "ohne fallback; kommt aus Marc 260abc:264abc (und 533) aber nach einem bestimmten Muster"
-        },
-        {
-            "name": "Erscheinungssort",
-            "source": "dict",
-            "graph": "http://rdaregistry.info/Elements/u/P60163",
-            "field": "publishPlace",
-            "required": "optional",
-            "fallback": {
-                "source": "marc",
-                "field": "260",
-                "subfield": "a",
-                "fallback": {
-                        "source": "marc",
-                        "field": "264",
-                        "subfield": "a"
-                }
-            }
-        },
-        {
-            "name": "Verlag",
-            "source": "dict",
-            "graph": "http://purl.org/dc/terms/publisher",
-            "field": "publisher",
-            "required": "optional",
-            "fallback": {
-                "source": "marc",
-                "field": "260",
-                "subfield": "b",
-                "fallback": {
-                    "source": "marc",
-                    "field": "264",
-                    "subfield": "b"
-                }
-            }
-        },
-        {
-            "name": "Erscheinungsjahr",
-            "source": "dict",
-            "graph": "http://purl.org/dc/terms/issued",
-            "field": "publishDateSort",
-            "alternatives": ["publishDate"],
-            "required": "optional",
-            "comment": "publishDateSort ist normalisiertes Datum, ohne bibliographische Feinheiten und damit ohne Klammern, Kreuze etc.",
-            "fallback": {
-                "source": "marc",
-                "field": "260",
-                "subfield": "c",
-                "fallback": {
-                    "source": "marc",
-                    "field": "264",
-                    "subfield": "c"
-                }
-            }
-        },
-        {
-            "name": "Umfang",
-            "source": "dict",
-            "graph": "https://schema.org/numberOfPages",
-            "field": "physical",
-            "required": "optional",
-            "comment": "DINI-KIM-Vorschlag http://iflastandards.info/ns/isbd/elements/P1053 scheint unpassend; schema.org aber eigentlich nur für Book; evtl. http://purl.org/dc/terms/extent ? lobid nutzt http://id.loc.gov/ontologies/bibframe/extent",
-			"fallback": {
-                "source": "marc",
-                "field": "300",
-                "subfield": "a"
-            }
-        },
-		{
-            "name": "Auflage/Ausgabe",
-            "source": "dict",
-            "graph": "https://schema.org/bookEdition",
-            "field": "edition",
-            "required": "optional",
-            "comment": "DINI-KIM-Vorschlag bibo/edition - löst nicht auf; schema.org nur für Book",
-			"fallback": {
-                "source": "marc",
-                "field": "250",
-                "subfield": "a"
-            }
-        },
-        {
-            "name": "Übergeordnetes Werk",
-            "source": "dict",
-            "graph": "http://purl.org/dc/terms/bibliographicCitation",
-            "field": "container_title",
-            "required": "optional",
-            "fallback": {
-                "source": "marc",
-                "field": "773",
-                "subfield": "t",
-                "fallback": {
-                     "source": "marc",
-                     "field": "773",
-                     "subfield": "s",
-                     "fallback": {
-                          "source": "marc",
-                          "field": "773",
-                           "subfield": "a"
-                     }
-                }
-            }
-        },
-        {
-            "name": "Hochschulschriftenvermerk",
-            "source": "marc",
-            "graph": "http://rdaregistry.info/Elements/u/P60489",
-            "field": "502",
-			"subfield": "a",
-            "required": "optional",
-            "comment": "Solr-Feld dissertation_note wird inzwischen nicht mehr befüllt"
-        },
-        {
-            "name": "Typ der Dokument Art",
-            "source": "dict",
-            "graph": "https://www.w3.org/TR/rdf-schema/#ch_required",
-            "field": "format_finc",
-            "required": "optional",
-            "comment": "TODO",
-            "type": "triple",
-            "mapping_settings": {
-                "$default": "http://purl.org/ontology/bibo/Document",
-                "$ref": "./translation_maps/documents.json"
-            }
-        },
-		{
-			"name": "Inhaltstyp",
-			"source": "marc",
-			"graph": "http://www.rdaregistry.info/Elements/u/#P60049",
-			"field": "336",
-			"subfield": "a",
-			"required": "optional",
-			"mapping": {
-                "aufgeführte Musik": "http://rdaregistry.info/termList/RDAContentType/1011",
-				"Bewegungsnotation": "http://rdaregistry.info/termList/RDAContentType/1009",
-				"Computerdaten": "http://rdaregistry.info/termList/RDAContentType/1007",
-				"Computerprogramm": "http://rdaregistry.info/termList/RDAContentType/1008",
-				"dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1021",
-				"dreidimensionales bewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1022",
-				"Geräusche": "http://rdaregistry.info/termList/RDAContentType/1012",
-				"gesprochenes Wort": "http://rdaregistry.info/termList/RDAContentType/1013",
-				"kartografische dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1006",
-				"kartografischer Datensatz": "http://rdaregistry.info/termList/RDAContentType/1001",
-				"kartografisches bewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1003",
-				"kartografisches Bild": "http://rdaregistry.info/termList/RDAContentType/1002",
-				"kartografisches taktiles Bild": "http://rdaregistry.info/termList/RDAContentType/1004",
-				"kartografische taktile dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1005",
-				"Noten": "http://rdaregistry.info/termList/RDAContentType/1010",
-				"taktile Bewegungsnotation": "http://rdaregistry.info/termList/RDAContentType/1017",
-				"taktile dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1019",
-				"taktile Noten": "http://rdaregistry.info/termList/RDAContentType/1016",
-				"taktiler Text": "http://rdaregistry.info/termList/RDAContentType/1018",
-				"taktiles Bild": "http://rdaregistry.info/termList/RDAContentType/1015",
-				"Text": "http://rdaregistry.info/termList/RDAContentType/1020",
-				"unbewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1014",
-				"zweidimensionales bewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1023"
-            }
+{
+	"id_source": "dict",
+	"id_field": "id",
+	"id_fallback": {
+		"source": "marc",
+		"field": "001",
+		"subfield": "none"
 		},
+	"nodes": [
 		{
-			"name": "Medientyp",
+		"name": "Hauptsachtitel",
+		"source": "dict",
+		"graph": "http://purl.org/dc/terms/title",
+		"field": "title",
+		"alternatives": ["title_short"],
+		"required": "optional",
+		"fallback": {
 			"source": "marc",
-			"graph": "http://www.rdaregistry.info/Elements/u/#P60050",
-			"field": "337",
-			"subfield": "a",
-			"required": "optional",
-			"type": "triple",
-			"mapping": {
-				"audio": "http://rdaregistry.info/termList/RDAMediaType/1001",
-				"Mikroform": "http://rdaregistry.info/termList/RDAMediaType/1002",
-				"Computermedien": "http://rdaregistry.info/termList/RDAMediaType/1003",
-				"mikroskopisch": "http://rdaregistry.info/termList/RDAMediaType/1004",
-				"projizierbar": "http://rdaregistry.info/termList/RDAMediaType/1005",
-				"stereografisch": "http://rdaregistry.info/termList/RDAMediaType/1006",
-				"ohne Hilfsmittel zu benutzen": "http://rdaregistry.info/termList/RDAMediaType/1007",
-				"video": "http://rdaregistry.info/termList/RDAMediaType/1008"
+			"field": "245",
+			"subfields": ["a", "b"]
 			}
 		},
-        {
-            "name": "Datenträgertyp",
-            "source": "marc",
-            "graph": "http://www.rdaregistry.info/Elements/u/#P60048",
-            "field": "338",
-			"subfield": "a",
-            "required": "optional",
-            "comment": "evtl. weniger wichtig?; fallback?",
-            "type": "triple",
-            "mapping": {
-				"Audiocartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1002",
-				"Audio Belt": "http://www.rdaregistry.info/termList/RDACarrierType/#1070",
-				"Audio wire reel": "http://www.rdaregistry.info/termList/RDACarrierType/#1071",
-				"Audiodisk": "http://www.rdaregistry.info/termList/RDACarrierType/#1004",
-				"Audiokassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1007",
-				"Band": "http://www.rdaregistry.info/termList/RDACarrierType/#1049",
-				"Blatt": "http://www.rdaregistry.info/termList/RDACarrierType/#1048",
-				"Computerchip-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1012",
-				"Computerdisk": "http://www.rdaregistry.info/termList/RDACarrierType/#1013",
-				"Computerdisk-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1014",
-				"Dia": "http://www.rdaregistry.info/termList/RDACarrierType/#1040",
-				"Filmdose": "http://www.rdaregistry.info/termList/RDACarrierType/#1032",
-				"Filmkassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1033",
-				"Filmrolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1069",
-				"Filmspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1034",
-				"Filmstreifen": "http://www.rdaregistry.info/termList/RDACarrierType/#1035",
-				"Filmstreifen für Einzelbildvorführung": "http://www.rdaregistry.info/termList/RDACarrierType/#1036",
-				"Filmstreifen-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1037",
-				"Flipchart": "http://www.rdaregistry.info/termList/RDACarrierType/#1046",
-				"Gegenstand": "http://www.rdaregistry.info/termList/RDACarrierType/#1059",
-				"Karte": "http://www.rdaregistry.info/termList/RDACarrierType/#1045",
-				"Lichtundurchlässiger Mikrofiche": "http://www.rdaregistry.info/termList/RDACarrierType/#1028",
-				"Magnetbandcartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1015",
-				"Magnetbandkassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1016",
-				"Magnetbandspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1017",
-				"Mikrofiche": "http://www.rdaregistry.info/termList/RDACarrierType/#1022",
-				"Mikrofichekassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1023",
-				"Mikrofilm-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1024",
-				"Mikrofilmkassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1025",
-				"Mikrofilmlochkarte": "http://www.rdaregistry.info/termList/RDACarrierType/#1021",
-				"Mikrofilmrolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1056",
-				"Mikrofilmspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1026",
-				"Mikrofilmstreifen": "http://www.rdaregistry.info/termList/RDACarrierType/#1027",
-				"Notenrolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1006",
-				"Objektträger": "http://www.rdaregistry.info/termList/RDACarrierType/#1030",
-				"Online-Ressource": "http://www.rdaregistry.info/termList/RDACarrierType/#1018",
-				"Overheadfolie": "http://www.rdaregistry.info/termList/RDACarrierType/#1039",
-				"Phonographenzylinder": "http://www.rdaregistry.info/termList/RDACarrierType/#1003",
-				"Rolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1047",
-				"Speicherkarte": "http://www.rdaregistry.info/termList/RDACarrierType/#1011",
-				"Stereobild": "http://www.rdaregistry.info/termList/RDACarrierType/#1042",
-				"Stereografische Disk": "http://www.rdaregistry.info/termList/RDACarrierType/#1043",
-				"Tonbandspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1008",
-				"Tonspurspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1005",
-				"Videobandspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1053",
-				"Videocartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1051",
-				"Videodisk": "http://www.rdaregistry.info/termList/RDACarrierType/#1060",
-				"Videokassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1052"
-            }
-         },
-		 {
-			"name": "Genre",
-			"source": "dict",
-			"graph": "http://rdaregistry.info/Elements/u/P60584",
-			"field": "genre_facet",
-			"required": "optional",
-			"comment": "nature of content",
-			"fallback": {
-                     "source": "marc",
-                     "field": "655",
-                     "subfield": "a"
-					 }
-		 },
-		 {
-			"name": "Parallelausgabe",
+		{
+		"name": "Angabe zu unselbständigen Teilen",
+		"source": "dict",
+		"graph": "http://rdaregistry.info/Elements/u/P60493",
+		"field": "title_part_str",
+		"required": "optional",
+		"fallback": {
 			"source": "marc",
-			"graph": "http://purl.org/dc/terms/hasVersion",
-			"field": "776",
-			"subfield": "w",
-			"required": "optional",
-			"type": "triple",
-            "prepend": "https://data.finc.info/resources/0-",
-            "match": "(\\(DE-627\\))[0-9]*",
-            "cut": "(\\(DE-627\\))"
-		 },
-         {
-            "name": "Sprache des Objects",
-            "source": "dict",
-            "graph": "http://purl.org/dc/terms/language",
-            "required": "optional",
-            "field": "language",
-            "type": "triple",
-            "mapping_settings": { "$ref": "./translation_maps/languages_long.json" },
-			"comment": "",
+			"field": "245",
+			"subfields": ["n", "p"]
+			}
+        },
+		{
+		"name": "Paralleltitel",
+		"source": "dict",
+		"graph": "http://purl.org/dc/terms/alternative",
+		"field": "title_alt",
+		"required": "optional",
+		"fallback": {
+			"source": "marc",
+			"field": "240",
+			"subfield": "a"
+			},
+				"fallback": {
+					"source": "marc",
+					"field": "130",
+					"subfield": "a"
+					},
+						"fallback": {
+						"source": "marc",
+						"field": "246",
+						"subfield": "a"
+						}
+		},
+		{
+		"name": "Geistige Schöpfer",
+		"source": "marc",
+		"graph": "http://purl.org/dc/terms/creator",
+		"field": "100", 
+		"alternatives": ["110", "700", "710"],
+		"subfield": "0",
+		"required": "optional",
+		"comment": "TODO: firstAuthorRoles in subfield 4: arc,art,aut,chr,cll,cmp,com,cre,ctg,dsr,enj,fmk,inv,ive,ivr,lbt,lsa,lyr,pht,pra,prg,rsp,scl",
+		"type": "triple",
+		"prepend": "http://d-nb.info/gnd/",
+		"match": "(\\(DE-588\\))[0-9]*",
+		"cut": "(\\(DE-588\\))"
+		},
+		{
+		"name": "Beteiligte",
+		"source": "marc",
+		"graph": "http://purl.org/dc/terms/contributor",
+		"field": "100", 
+		"alternatives": ["110", "700", "710"],	
+		"subfield": "0",
+		"required": "optional",
+		"comment": "TODO: alle außer first authors roles in subfield 4: arc,art,aut,chr,cll,cmp,com,cre,ctg,dsr,enj,fmk,inv,ive,ivr,lbt,lsa,lyr,pht,pra,prg,rsp,scl",
+		"type": "triple",
+		"prepend": "http://d-nb.info/gnd/",
+		"match": "(\\(DE-588\\))[0-9]*",
+		"cut": "(\\(DE-588\\))"
+		},
+		{
+		"name": "Beteiligte, spezifische Funktion",
+		"comment": "Verfasserrolle, nicht immer vergeben, kann aber auch mehrfach vergeben sein",
+		"source": "marc",
+		"graph": "https://id.loc.gov/vocabulary/relators/html",
+		"required": "optional",
+		"mapping_settings": {
+			"$ref": "./translation_maps/roles.json",
+			"$default": "true"
+			},
+		"field": "100", 
+		"alternatives": ["110", "700", "710"],
+		"subfield": "4",
+		"fallback": {
+			"source": "dict",
+            "field": "author_role",
+			"alternatives": ["author_corporate_role", "author2_role", "author_corporate2_role"]
+			}
+        },
+		{
+		"name": "Erscheinungsvermerk",
+		"source": "dict",
+		"graph": "http://rdaregistry.info/Elements/u/P60333",
+		"field": "imprint_str_mv",
+		"required": "optional",
+		"comment": "ohne fallback; kommt aus Marc 260abc:264abc (und 533) mit ISBD-Formatierung"
+        },
+		{
+		"name": "Erscheinungssort",
+		"source": "dict",
+		"graph": "http://rdaregistry.info/Elements/u/P60163",
+		"field": "publishPlace",
+		"required": "optional",
+		"fallback": {
+			"source": "marc",
+			"field": "260",
+			"subfield": "a",
 			"fallback": {
 				"source": "marc",
-				"field": "041",
-				"subfield": "a",
-				"prepend": "https://id.loc.gov/vocabulary/languages/"
-			}
-        },
-        {
-            "name": "Verfügbarkeit",
-            "source": "dict",
-            "graph": "http://schema.org/availability",
-            "required": "optional",
-            "field": "kxp_id_str",
-            "prepend": "https://data.ub.uni-leipzig.de/item/wachtl/DE-15:ppn:",
-            "type": "triple"
-        },
-        {
-            "name" : "Beteiligte als Graph",
-            "source": "dict",
-            "graph": "http://purl.org/dc/terms/contributor",
-            "field": "names_id_str_mv",
-            "required": "optional",
-            "type": "triple",
-            "prepend": "http://d-nb.info/gnd/",
-            "match": "(\\(DE-588\\))[0-9]*",
-            "cut": "(\\(DE-588\\))"
-        },
-        {
-            "name": "Experimentell: definitive Authoren - literal",
-            "source": "dict",
-            "graph": "http://purl.org/dc/terms/contributor",
-            "comment1": "for this graph is the mandatory default",
-            "graph_map": {
-                "aus": "http://purl.org/dc/elements/1.1/creator",
-                "aut": "http://purl.org/dc/elements/1.1/creator"
-                },
-            "graph_map_ref": "./translation_maps/role_graphs.json",
-            "graph_field": "author2_role",
-            "field": "author2",
-            "required": "optional"
-        },
-        {
-            "name": "Verfasserrolle",
-            "comment": "nicht immer vergeben, kann aber auch mehrfach vergeben sein",
-            "source": "dict",
-            "graph": "http://id.loc.gov/vocabulary/relators.html",
-            "field": "author_role",
-            "alternatives": ["author_corporate_role", "author2_role", "author_corporate2_role"],
-            "required": "optional",
-            "mapping_settings": {
-                "$ref": "./translation_maps/roles.json",
-                "$default": true
+				"field": "264",
+				"subfield": "a"
                 }
+            }
         },
         {
-            "name": "Gesamtaufnahme",
-            "source": "dict",
-            "graph": "http://purl.org/dc/terms/isPartOf",
-            "field": "hierarchy_parent_id",
-			"required": "optional",
-            "prepend": "https://data.finc.info/resources/",
-            "type": "triple"
+		"name": "Verlag",
+		"source": "dict",
+		"graph": "http://purl.org/dc/terms/publisher",
+		"field": "publisher",
+		"required": "optional",
+		"fallback": {
+			"source": "marc",
+			"field": "260",
+			"subfield": "b",
+			"fallback": {
+				"source": "marc",
+				"field": "264",
+				"subfield": "b"
+                }
+            }
+        },
+        {
+		"name": "Erscheinungsjahr",
+		"source": "dict",
+		"graph": "http://purl.org/dc/terms/issued",
+		"field": "publishDateSort",
+		"alternatives": ["publishDate"],
+		"required": "optional",
+		"comment": "publishDateSort ist normalisiertes Datum, ohne bibliographische Feinheiten und damit ohne Klammern etc.",
+		"fallback": {
+			"source": "marc",
+			"field": "260",
+			"subfield": "c",
+			"fallback": {
+				"source": "marc",
+				"field": "264",
+				"subfield": "c"
+                }
+            }
         },
 		{
-            "name": "Inhaltsbeschreibung",
-            "source": "marc",
-            "graph": "http://purl.org/dc/terms/description",
-			"field": "contents",
-            "required": "optional",
-            "field": "520",
+		"name": "Hochschulschriftenvermerk",
+		"source": "marc",
+		"graph": "http://rdaregistry.info/Elements/u/P60489",
+		"field": "502",
+		"subfield": "a",
+		"required": "optional",
+		"comment": "Solr-Feld dissertation_note wird inzwischen nicht mehr befüllt, daher kein fallback mehr"
+        },
+		{
+		"name": "ISSN",
+		"source": "marc",
+		"graph":  "https://schema.org/issn",
+		"field": "022",
+		"subfield": "a",
+		"required": "optional",
+		"comment": "abweichend von DINI-KIM-Empfehlung schema.org statt bibo",
+			"fallback": {
+				"source": "dict",
+				"field": "issn"
+			}
+        },
+		{
+		"name": "ISBN",
+		"source": "marc",
+		"graph": "http://schema.org/isbn",
+		"field": "020",
+		"subfield": "a",
+		"required": "optional",
+		"comment": "abweichend von DINI-KIM-Empfehlung schema.org statt bibo",
+			"fallback": {
+				"source": "dict",
+				"field": "isbn"
+            }
+        },
+		{
+		"name": "ZDB-ID",
+		"source": "dict",
+		"graph": "http://purl.org/lobid/lv#zdbID",
+		"field": "zdb",
+		"required": "optional",
+		"comment": "als fallback wäre 016a (wenn $2 DE-600) möglich, aber nicht unbedingt nötig"
+        },
+        {
+		"name": "URN",
+		"source": "dict",
+		"graph": "https://schema.org/sameAs",
+		"field": "url",
+		"required": "optional",
+		"comment": "evtl. marc als Quelle und dict als fallback, das wäre genauer; für AI aber Solr relevant",
+		"fallback": {
+			"source": "marc",
+			"field": "856",
+			"subfield": "u",
+			"comment": "nur sinnvoll, wenn Ind2=0"
+			}
+        },
+		{
+		"name": "Inhaltstyp",
+		"source": "marc",
+		"graph": "http://www.rdaregistry.info/Elements/u/#P60049",
+		"field": "336",
+		"subfield": "a",
+		"required": "optional",
+		"mapping": {
+			"aufgeführte Musik": "http://rdaregistry.info/termList/RDAContentType/1011",
+			"Bewegungsnotation": "http://rdaregistry.info/termList/RDAContentType/1009",
+			"Computerdaten": "http://rdaregistry.info/termList/RDAContentType/1007",
+			"Computerprogramm": "http://rdaregistry.info/termList/RDAContentType/1008",
+			"dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1021",
+			"dreidimensionales bewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1022",
+			"Geräusche": "http://rdaregistry.info/termList/RDAContentType/1012",
+			"gesprochenes Wort": "http://rdaregistry.info/termList/RDAContentType/1013",
+			"kartografische dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1006",
+			"kartografischer Datensatz": "http://rdaregistry.info/termList/RDAContentType/1001",
+			"kartografisches bewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1003",
+			"kartografisches Bild": "http://rdaregistry.info/termList/RDAContentType/1002",
+			"kartografisches taktiles Bild": "http://rdaregistry.info/termList/RDAContentType/1004",
+			"kartografische taktile dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1005",
+			"Noten": "http://rdaregistry.info/termList/RDAContentType/1010",
+			"taktile Bewegungsnotation": "http://rdaregistry.info/termList/RDAContentType/1017",
+			"taktile dreidimensionale Form": "http://rdaregistry.info/termList/RDAContentType/1019",
+			"taktile Noten": "http://rdaregistry.info/termList/RDAContentType/1016",
+			"taktiler Text": "http://rdaregistry.info/termList/RDAContentType/1018",
+			"taktiles Bild": "http://rdaregistry.info/termList/RDAContentType/1015",
+			"Text": "http://rdaregistry.info/termList/RDAContentType/1020",
+			"unbewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1014",
+			"zweidimensionales bewegtes Bild": "http://rdaregistry.info/termList/RDAContentType/1023"
+			}
+		},
+		{
+		"name": "Medientyp",
+		"source": "marc",
+		"graph": "http://www.rdaregistry.info/Elements/u/#P60050",
+		"field": "337",
+		"subfield": "a",
+		"required": "optional",
+		"type": "triple",
+		"mapping": {
+			"audio": "http://rdaregistry.info/termList/RDAMediaType/1001",
+			"Mikroform": "http://rdaregistry.info/termList/RDAMediaType/1002",
+			"Computermedien": "http://rdaregistry.info/termList/RDAMediaType/1003",
+			"mikroskopisch": "http://rdaregistry.info/termList/RDAMediaType/1004",
+			"projizierbar": "http://rdaregistry.info/termList/RDAMediaType/1005",
+			"stereografisch": "http://rdaregistry.info/termList/RDAMediaType/1006",
+			"ohne Hilfsmittel zu benutzen": "http://rdaregistry.info/termList/RDAMediaType/1007",
+			"video": "http://rdaregistry.info/termList/RDAMediaType/1008"
+			}
+		},
+        {
+		"name": "Datenträgertyp",
+		"source": "marc",
+		"graph": "http://www.rdaregistry.info/Elements/u/#P60048",
+		"field": "338",
+		"subfield": "a",
+		"required": "optional",
+		"comment": "evtl. weniger wichtig?; fallback?",
+		"type": "triple",
+		"mapping": {
+			"Audiocartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1002",
+			"Audio Belt": "http://www.rdaregistry.info/termList/RDACarrierType/#1070",
+			"Audio wire reel": "http://www.rdaregistry.info/termList/RDACarrierType/#1071",
+			"Audiodisk": "http://www.rdaregistry.info/termList/RDACarrierType/#1004",
+			"Audiokassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1007",
+			"Band": "http://www.rdaregistry.info/termList/RDACarrierType/#1049",
+			"Blatt": "http://www.rdaregistry.info/termList/RDACarrierType/#1048",
+			"Computerchip-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1012",
+			"Computerdisk": "http://www.rdaregistry.info/termList/RDACarrierType/#1013",
+			"Computerdisk-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1014",
+			"Dia": "http://www.rdaregistry.info/termList/RDACarrierType/#1040",
+			"Filmdose": "http://www.rdaregistry.info/termList/RDACarrierType/#1032",
+			"Filmkassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1033",
+			"Filmrolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1069",
+			"Filmspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1034",
+			"Filmstreifen": "http://www.rdaregistry.info/termList/RDACarrierType/#1035",
+			"Filmstreifen für Einzelbildvorführung": "http://www.rdaregistry.info/termList/RDACarrierType/#1036",
+			"Filmstreifen-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1037",
+			"Flipchart": "http://www.rdaregistry.info/termList/RDACarrierType/#1046",
+			"Gegenstand": "http://www.rdaregistry.info/termList/RDACarrierType/#1059",
+			"Karte": "http://www.rdaregistry.info/termList/RDACarrierType/#1045",
+			"Lichtundurchlässiger Mikrofiche": "http://www.rdaregistry.info/termList/RDACarrierType/#1028",
+			"Magnetbandcartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1015",
+			"Magnetbandkassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1016",
+			"Magnetbandspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1017",
+			"Mikrofiche": "http://www.rdaregistry.info/termList/RDACarrierType/#1022",
+			"Mikrofichekassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1023",
+			"Mikrofilm-Cartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1024",
+			"Mikrofilmkassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1025",
+			"Mikrofilmlochkarte": "http://www.rdaregistry.info/termList/RDACarrierType/#1021",
+			"Mikrofilmrolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1056",
+			"Mikrofilmspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1026",
+			"Mikrofilmstreifen": "http://www.rdaregistry.info/termList/RDACarrierType/#1027",
+			"Notenrolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1006",
+			"Objektträger": "http://www.rdaregistry.info/termList/RDACarrierType/#1030",
+			"Online-Ressource": "http://www.rdaregistry.info/termList/RDACarrierType/#1018",
+			"Overheadfolie": "http://www.rdaregistry.info/termList/RDACarrierType/#1039",
+			"Phonographenzylinder": "http://www.rdaregistry.info/termList/RDACarrierType/#1003",
+			"Rolle": "http://www.rdaregistry.info/termList/RDACarrierType/#1047",
+			"Speicherkarte": "http://www.rdaregistry.info/termList/RDACarrierType/#1011",
+			"Stereobild": "http://www.rdaregistry.info/termList/RDACarrierType/#1042",
+			"Stereografische Disk": "http://www.rdaregistry.info/termList/RDACarrierType/#1043",
+			"Tonbandspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1008",
+			"Tonspurspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1005",
+			"Videobandspule": "http://www.rdaregistry.info/termList/RDACarrierType/#1053",
+			"Videocartridge": "http://www.rdaregistry.info/termList/RDACarrierType/#1051",
+			"Videodisk": "http://www.rdaregistry.info/termList/RDACarrierType/#1060",
+			"Videokassette": "http://www.rdaregistry.info/termList/RDACarrierType/#1052"
+			}
+		},
+		{
+		"name": "Übergeordneter Titel",
+		"source": "dict",
+		"graph": "http://purl.org/dc/terms/isPartOf",
+		"field": "hierarchy_parent_id",
+		"prepend": "https://data.finc.info/resources/",
+		"required": "optional"
+        },
+		{
+		"name": "Parallele Ausgabe (andere Sprache)",
+		"source": "marc",
+		"graph": "http://purl.org/dc/terms/hasVersion",
+		"field": "775",
+		"subfield": "w",
+		"required": "optional",
+		"type": "triple",
+		"prepend": "https://data.finc.info/resources/0-",
+		"match": "(\\(DE-627\\))[0-9]*",
+		"cut": "(\\(DE-627\\))"
+        },
+		{
+		"name": "Parallele Ausgabe (physisch anders)",
+		"source": "marc",
+		"graph": "http://purl.org/dc/terms/hasVersion",
+		"field": "776",
+		"subfield": "w",
+		"required": "optional",
+		"type": "triple",
+		"prepend": "https://data.finc.info/resources/0-",
+		"match": "(\\(DE-627\\))[0-9]*",
+		"cut": "(\\(DE-627\\))"
+        },
+		{
+		"name": "Vorgänger (Periodika)",
+		"source": "marc",
+		"graph": "http://www.rdaregistry.info/Elements/u/#P60261",
+		"field": "780",
+		"subfield": "w",
+		"required": "optional",
+		"type": "triple",
+		"comment": "es kommt häufig vor, dass Vorgänger/Nachfolger nicht im Index sind",
+		"prepend": "https://data.finc.info/resources/0-",
+		"match": "(\\(DE-627\\))[0-9]*",
+		"cut": "(\\(DE-627\\))"
+        },				
+		{
+		"name": "Nachfolger (Periodika)",
+		"source": "marc",
+		"graph": "http://www.rdaregistry.info/Elements/u/#P60278",
+		"field": "785",
+		"subfield": "w",
+		"required": "optional",
+		"type": "triple",
+		"comment": "es kommt häufig vor, dass Vorgänger/Nachfolger nicht im Index sind",
+		"prepend": "https://data.finc.info/resources/0-",
+		"match": "(\\(DE-627\\))[0-9]*",
+		"cut": "(\\(DE-627\\))"
+        },			
+        {
+		"name": "Sprache",
+		"source": "dict",
+		"graph": "http://purl.org/dc/terms/language",
+		"required": "optional",
+		"field": "language",
+		"type": "triple",
+		"mapping_settings": { "$ref": "./translation_maps/languages_long.json" },
+		"comment": "im Solr stehen die englischsprachigen Labels",
+		"fallback": {
+			"source": "marc",
+			"field": "041",
 			"subfield": "a",
-			"comment" : "unnötig?"
-        }
-		
+			"prepend": "https://id.loc.gov/vocabulary/languages/"
+			}
+		},
+        {
+		"name": "Umfang",
+		"source": "dict",
+		"graph": "https://schema.org/numberOfPages",
+		"field": "physical",
+		"required": "optional",
+		"comment": "DINI-KIM-Vorschlag http://iflastandards.info/ns/isbd/elements/P1053 scheint unpassend; schema.org aber eigentlich nur für Book; evtl. http://purl.org/dc/terms/extent ? lobid nutzt http://id.loc.gov/ontologies/bibframe/extent",
+			"fallback": {
+			"source": "marc",
+			"field": "300",
+			"subfield": "a"
+			}
+		},
+		{
+		"name": "Ausgabe (Auflage)",
+		"source": "dict",
+		"graph": "https://schema.org/bookEdition",
+		"field": "edition",
+		"required": "optional",
+		"fallback": {
+			"source": "marc",
+			"field": "250",
+			"subfield": "a"
+			}
+		},
+		{
+		"name": "Genre",
+		"source": "dict",
+		"graph": "http://rdaregistry.info/Elements/u/P60584",
+		"field": "genre_facet",
+		"required": "optional",
+		"comment": "nature of content, ",
+		"fallback": {
+			"source": "marc",
+			"field": "655",
+			"subfield": "a"
+			}
+		},
+		{
+		"name": "Verfügbarkeit",
+		"source": "dict",
+		"graph": "http://schema.org/availability",
+		"required": "optional",
+		"field": "kxp_id_str",
+		"prepend": "https://data.ub.uni-leipzig.de/item/wachtl/DE-15:ppn:",
+		"type": "triple"
+		}
     ]
  }

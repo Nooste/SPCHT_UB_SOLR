@@ -25,6 +25,18 @@
          }
       },
       {
+            "name": "Type, Dokument Art",
+            "source": "dict",
+            "graph": "http://www.w3.org/1999/02/22-rdf-syntax-ns#type",
+            "field": "format_finc",
+            "required": "optional",
+            "type": "triple",
+            "mapping_settings": {
+                "$default": "http://purl.org/ontology/bibo/Document",
+                "$ref": "./translation_maps/documents.json"
+            }
+       },
+      {
          "name":"Angabe zu unselbständigen Teilen",
          "source":"dict",
          "graph":"http://rdaregistry.info/Elements/u/P60493",

@@ -442,12 +442,10 @@
          "comment":"publishDateSort ist normalisiertes Datum, ohne bibliographische Feinheiten und damit ohne Klammern etc.",
          "fallback":{
             "source":"marc",
-            "field":"260",
-            "subfield":"c",
+            "field":"260:c"
             "fallback":{
                "source":"marc",
-               "field":"264",
-               "subfield":"c"
+               "field":"264:c"
             }
          }
       },
@@ -622,6 +620,7 @@
          "source":"dict",
          "graph":"http://purl.org/dc/terms/isPartOf",
          "field":"hierarchy_parent_id",
+         "type": "triple",
          "prepend":"https://data.finc.info/resources/",
          "required":"optional"
       },

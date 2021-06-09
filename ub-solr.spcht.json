@@ -442,7 +442,7 @@
          "comment":"publishDateSort ist normalisiertes Datum, ohne bibliographische Feinheiten und damit ohne Klammern etc.",
          "fallback":{
             "source":"marc",
-            "field":"260:c"
+            "field":"260:c",
             "fallback":{
                "source":"marc",
                "field":"264:c"
